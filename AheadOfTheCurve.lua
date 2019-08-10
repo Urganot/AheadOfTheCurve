@@ -32,23 +32,62 @@ function AheadOfTheCurve:OnInitialize()
 
     self.instances = {
         {
-            ids = {502, 504, 507, 510, 514, 518, 522, 526, 530, 534, 659, 661},
+            ids = {   502 -- Atal'Dazar
+					, 504 -- Temple of Sethraliss
+					, 507 -- The Underrot
+					, 510 -- The MOTHERLODE
+					, 514 -- Kings' Rest (H)
+					, 661 -- Kings' Rest (A)
+					, 518 -- Freehold
+					, 522 -- Shrine of the Storm
+					, 526 -- Tol Dagor
+					, 530 -- Waycrest Manor
+					, 534 -- Siege of Boralus (H)
+					, 659 -- Siege of Boralus (A)
+					},
             name = 'Mythic Plus (BfA)',
-            achievements = {13078, 13080, 13079, 13075},
+            achievements = {  13078 -- Realms first Keaystone Master (15)
+							, 13781 -- Keystone Master: Season Three (15)
+							, 13780 -- Keystone Conqueror: Season Three (10)
+							, 13449 -- Keystone Master: Season Two (15)
+							, 13448 -- Keystone Conqueror: Season Two (10)
+							, 13080 -- Keystone Master: Season One (15)
+							, 13079 -- Keystone Conqueror: Season One (10)
+							, 13075 -- Keymaster
+							},
             highestCompleted = nil,
         },
         {
-            ids = {494, 495, 496},
-            name = 'Uldir',
-            achievements = {12535, 12533, 12536, 12523},
+            ids = {   669 -- Mythic
+					},
+            name = 'Operation: Mechagon',
+            achievements = {  13789 -- Hertz Locker (Hard Mode deathless
+							, 13624 -- Keep DPS-ing and Nobody Explodes (Hard Mode)
+							, 13700 -- The Mechagonian Threat (Mythic clear) (Horde)
+							, 13553 -- The Mechagonian Threat (Mythic clear) (Alliance)
+							},
             highestCompleted = nil,
         },
         {
-            ids = {657},
-            name = 'World Bosses',
-            achievements = {},
+            ids = {	  670 -- Normal
+					, 671 -- Heroic
+					, 672 -- Mythic
+					},
+            name = 'Azshara\'s Eternal Palace',
+            achievements = {  13785 -- Bleeding Edge (Mythic)
+							, 13733 -- Mythic: Azshara
+							, 13732 -- Mythic: The Queen's Court
+							, 13731 -- Mythic: Za'qul
+							, 13730 -- Mythic: Orgozoa
+							, 13729 -- Mythic: Lady Ashvane
+							, 13728 -- Mythic: Blackwater Behemoth
+							, 13784 -- Curve (Heroic)
+							, 13727 -- Mythic: Radiance
+							, 13726 -- Mythic: Abyssal Commander Sivara
+							, 13725 -- The Circle of Stars (Normal Wing 3)
+							},
             highestCompleted = nil,
-        }
+        },
     }
 end
 
@@ -166,7 +205,7 @@ function AheadOfTheCurve:GetLFGCategory(findAGroupButton)
 end
 
 function AheadOfTheCurve:GetLFGInstance(signUpButton)
-    local _, instanceId = C_LFGList.GetSearchResultInfo(signUpButton:GetParent().selectedResult)
+    local instanceId = C_LFGList.GetSearchResultInfo(signUpButton:GetParent().selectedResult)["activityID"]
     local highestCompleted = self:GetLFGAchievement(instanceId)
     local isMythicDungeon = self:IsMythicDungeon(instanceId)
     local checkButtonAchievementText, checkButtonAchievementWidth, checkButtonAchievementPoint = self:GetCheckButtonAchievementData(isMythicDungeon)
@@ -195,6 +234,7 @@ function AheadOfTheCurve:GetLFGInstance(signUpButton)
     end
 end
 
+
 function AheadOfTheCurve:GetCheckButtonAchievementData(isMythicDungeon)
     if self.db.global.enable.override then
         return 'Send Override Achievement', 158, -85
@@ -218,7 +258,9 @@ function AheadOfTheCurve:GetLFGAchievement(instanceId)
 end
 
 function AheadOfTheCurve:SendWhisper(signUpButton)
-    local _, instanceId, _, _, _, _, _, _, _, _, _, _, leaderName = C_LFGList.GetSearchResultInfo(signUpButton:GetParent().resultID)
+	local searchResultInfo = C_LFGList.GetSearchResultInfo(signUpButton:GetParent().resultID)
+    local instanceId = searchResultInfo["activityID"]
+	local leaderName = searchResultInfo["leaderName"]
 
     if self.checkButtonAchievement:GetChecked() or self.checkButtonKeystone:GetChecked() then
         local achievementId
